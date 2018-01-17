@@ -22,6 +22,9 @@ const uint16_t PixelFadeDuration = 300; // third of a second
 // one second divide by the number of pixels = loop once a second
 const uint16_t NextPixelMoveDuration = 100 / PixelCount; // how fast we move through the pixels
 
+const uint8_t COLUMNS = 25;
+const uint8_t ROWS = 12;
+
 NeoGamma<NeoGammaTableMethod> colorGamma; // for any fade animations, best to correct gamma
 
 NeoPixelBus<NeoGrbwFeature, NeoEsp32BitBang800KbpsMethod> strip(PixelCount, PixelPin);
@@ -31,6 +34,13 @@ public:
     virtual ~Animation() { }
 
     virtual void loop() { }
+
+    static uint16_t to_index(uint8_t col, uint8_t row) {
+        const int16_t c = col;
+        const int16_t r = row;
+
+        return c * (int16_t)ROWS + ((c % 2 == 0) ? r : ((int16_t)ROWS - r - 1));
+    }
 };
 
 class AnimStarryNight : public Animation {
@@ -173,6 +183,79 @@ private:
     RgbColor frontColor;  // the color at the front of the loop
 };
 
+class AnimWarpCore : public Animation {
+public:
+    static const int PULSE_COUNT = 4;
+    static const int PULSE_WIDTH = 2;
+
+    AnimWarpCore() : anims(PULSE_COUNT + 1)  {
+        anims.StartAnimation(0, random(500) + 500,
+            std::bind(&AnimWarpCore::start_pulse, this, std::placeholders::_1));
+    }
+
+    ~AnimWarpCore() {
+        anims.StopAll();
+    }
+
+    void loop() override {
+        anims.UpdateAnimations();
+    }
+
+private:
+    void start_pulse(AnimationParam const & param) {
+        if (param.state == AnimationState_Started) {
+            uint16_t indexAnim;
+            if (anims.NextAvailableAnimation(&indexAnim, 1)) {
+                pulses[indexAnim].pulse_center = 0;
+
+                anims.StartAnimation(indexAnim, 1000,
+                    std::bind(&AnimWarpCore::move_pulse, this, std::placeholders::_1));
+            }
+        } else if (param.state == AnimationState_Completed) {
+            anims.StartAnimation(0, random(500) + 500,
+                std::bind(&AnimWarpCore::start_pulse, this, std::placeholders::_1));
+        }
+    }
+
+    void move_pulse(AnimationParam const & param) {
+        if (param.state == AnimationState_Progress) {
+
+            const float ideal_center = param.progress * (float)ROWS;
+            const uint16_t row_center = ideal_center;
+
+            for (uint8_t row = row_center - PULSE_WIDTH; row < row_center + PULSE_WIDTH; row++) {
+                if (row < 0 | row >= ROWS) {
+                    continue;
+                }
+
+                const float d = fabsf(ideal_center - (float)row) / (float)(PULSE_WIDTH + 1);
+                const auto color = RgbwColor::LinearBlend(RgbwColor(0,0,255), RgbwColor(0,0,0), d);
+
+                for (uint8_t col = 0; col < COLUMNS; col++) {
+                    if (row > 0) {
+                        // strip.SetPixelColor(to_index(col, row - 1), RgbwColor(0, 0, 0));
+                    }
+
+                    strip.SetPixelColor(to_index(col, row), color);
+                }
+            }
+
+            pulses[param.index].pulse_center++;
+        } else if (param.state == AnimationState_Completed) {
+            for (uint8_t col = 0; col < COLUMNS; col++) {
+                //strip.SetPixelColor(to_index(col, ROWS - 1), RgbwColor(0, 0, 0));
+            }
+        }
+    }
+
+    struct pulse_state {
+        uint8_t pulse_center;
+    };
+
+    NeoPixelAnimator anims;
+    pulse_state pulses[PULSE_COUNT];
+};
+
 void SetRandomSeed() {
     uint32_t seed;
 
@@ -206,7 +289,7 @@ void loop() {
     // and avoiding using delay() is always a good thing for
     // any timing related routines
     if (!anim) {
-        anim = new AnimStarryNight();
+        anim = new AnimWarpCore();
     }
 
     anim->loop();
