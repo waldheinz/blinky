@@ -44,12 +44,13 @@ public:
 
 class AnimStarryNight : public Animation {
 public:
-    static const uint16_t STAR_COUNT = 16;
+    static const uint16_t STAR_COUNT = 32;
+    static const long FADE_TIME_MIN = 1000;
     static const long FADE_TIME = 2000;
 
     AnimStarryNight() : anims(STAR_COUNT) {
         for (uint16_t i = 0; i < STAR_COUNT; i++) {
-            anims.StartAnimation(i, random(FADE_TIME),
+            anims.StartAnimation(i, FADE_TIME_MIN + random(FADE_TIME),
                 std::bind(&AnimStarryNight::FadeOutAnimUpdate, this, std::placeholders::_1));
         }
     }
@@ -68,9 +69,8 @@ private:
         switch (param.state) {
             case AnimationState_Progress:
                 strip.SetPixelColor(indices[param.index],
-//                    colorGamma.Correct(
-                        RgbwColor::LinearBlend(
-                            RgbwColor(90), RgbwColor(0), param.progress));
+                    RgbwColor::LinearBlend(
+                        RgbwColor(128), RgbwColor(0), fabs(param.progress - 0.5) * 2));
                 break;
 
             case AnimationState_Started:
@@ -97,7 +97,7 @@ private:
 
             case AnimationState_Completed:
                 strip.SetPixelColor(indices[param.index], RgbwColor(0));
-                anims.StartAnimation(param.index, random(FADE_TIME),
+                anims.StartAnimation(param.index, FADE_TIME_MIN + random(FADE_TIME),
                     std::bind(&AnimStarryNight::FadeOutAnimUpdate, this, std::placeholders::_1));
                 break;
 
@@ -286,7 +286,7 @@ void loop() {
     // and avoiding using delay() is always a good thing for
     // any timing related routines
     if (!anim) {
-        anim = new AnimWarpCore();
+        anim = new AnimStarryNight();
     }
 
     anim->loop();
