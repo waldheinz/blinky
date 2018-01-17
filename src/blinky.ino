@@ -15,7 +15,6 @@
 #include <NeoPixelAnimator.h>
 
 const uint16_t PixelCount = 300; // make sure to set this to the number of pixels in your strip
-const uint16_t PixelPin = 25;  // make sure to set this to the correct pin, ignored for Esp8266
 const uint16_t AnimCount = PixelCount / 5 * 2 + 1; // we only need enough animations for the tail and one extra
 
 const uint16_t PixelFadeDuration = 300; // third of a second
@@ -27,7 +26,7 @@ const uint8_t ROWS = 12;
 
 NeoGamma<NeoGammaTableMethod> colorGamma; // for any fade animations, best to correct gamma
 
-NeoPixelBus<NeoGrbwFeature, NeoEsp32BitBang800KbpsMethod> strip(PixelCount, PixelPin);
+NeoPixelBus<NeoGrbwFeature, Neo800KbpsMethod> strip(PixelCount);
 
 class Animation {
 public:
