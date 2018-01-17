@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
     if (!anim) {
-        anim = new anim_fire();
+        anim = new anim_lighthouse();
     }
 
     anim->loop();
