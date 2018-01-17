@@ -1,16 +1,3 @@
-// NeoPixelFunLoop
-// This example will move a trail of light around a series of pixels.
-// A ring formation of pixels looks best.
-// The trail will have a slowly fading tail.
-//
-// This will demonstrate the use of the NeoPixelAnimator.
-// It shows the advanced use an animation to control the modification and
-// starting of other animations.
-// It also shows the normal use of animating colors.
-// It also demonstrates the ability to share an animation channel rather than
-// hard code them to pixels.
-//
-
 #include <NeoPixelBus.h>
 #include <NeoPixelAnimator.h>
 
