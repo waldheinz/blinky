@@ -2,6 +2,7 @@
 #include <NeoPixelAnimator.h>
 
 #include "anim.hpp"
+#include "anim_fire.hpp"
 #include "anim_lighthouse.hpp"
 #include "anim_starry_night.hpp"
 #include "anim_warp_core.hpp"
@@ -26,7 +27,6 @@ animation* anim = nullptr;
 
 void setup() {
     strip.Begin();
-    delay(2);
     strip.Show();
 
     SetRandomSeed();
@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
     if (!anim) {
-        anim = new anim_lighthouse();
+        anim = new anim_fire();
     }
 
     anim->loop();
