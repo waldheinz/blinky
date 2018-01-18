@@ -4,6 +4,7 @@
 #include "anim.hpp"
 #include "anim_fire.hpp"
 #include "anim_lighthouse.hpp"
+#include "anim_plasma.hpp"
 #include "anim_rain.hpp"
 #include "anim_starry_night.hpp"
 #include "anim_warp_core.hpp"
@@ -35,7 +36,7 @@ void setup() {
 
 void loop() {
     if (!anim) {
-        anim = new anim_fire();
+        anim = new anim_plasma();
     }
 
     anim->loop();
