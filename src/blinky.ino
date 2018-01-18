@@ -35,7 +35,7 @@ void setup() {
 
 void loop() {
     if (!anim) {
-        anim = new anim_rain();
+        anim = new anim_fire();
     }
 
     anim->loop();
