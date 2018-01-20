@@ -4,7 +4,7 @@
 
 class anim_rain final : public animation {
 public:
-    anim_rain() : anims(COLUMNS) {
+    anim_rain(output * out) : animation(out), anims(COLUMNS) {
         for (int i = 0; i < COLUMNS; i++) {
             start(i);
         }
@@ -29,9 +29,9 @@ private:
             for (int row = 0; row < ROWS; row++) {
                 const float d = std::min(std::max(fabsf(row - drop_y) / 2.0f, 0.0f), 1.0f);
                 const float de = NeoEase::CubicInOut(d);
-                const RgbwColor c = colorGamma.Correct(RgbwColor::LinearBlend(RgbwColor(0, 15, 64), RgbwColor(0), de));
+                const RgbwColor c = RgbwColor::LinearBlend(RgbwColor(0, 15, 64), RgbwColor(0), de);
 
-                strip.SetPixelColor(to_index(param.index, row), c);
+                set_pixel(param.index, row, c);
             }
         }
     }

@@ -12,7 +12,7 @@ public:
     static const long FADE_TIME_MIN = 1000;
     static const long FADE_TIME = 2000;
 
-    anim_starry_night() : anims(STAR_COUNT) {
+    anim_starry_night(output * out) : animation(out), anims(STAR_COUNT) {
         for (uint16_t i = 0; i < STAR_COUNT; i++) {
             anims.StartAnimation(i, FADE_TIME_MIN + random(FADE_TIME),
                 std::bind(&anim_starry_night::FadeOutAnimUpdate, this, std::placeholders::_1));
@@ -32,9 +32,8 @@ private:
 
         switch (param.state) {
             case AnimationState_Progress:
-                strip.SetPixelColor(indices[param.index],
-                    RgbwColor::LinearBlend(
-                        RgbwColor(128), RgbwColor(0), fabs(param.progress - 0.5) * 2));
+                set_pixel(indices[param.index],
+                    RgbwColor::LinearBlend(RgbwColor(128), RgbwColor(0), fabs(param.progress - 0.5) * 2));
                 break;
 
             case AnimationState_Started:
@@ -60,7 +59,7 @@ private:
                 break;
 
             case AnimationState_Completed:
-                strip.SetPixelColor(indices[param.index], RgbwColor(0));
+                set_pixel(indices[param.index], RgbwColor(0));
                 anims.StartAnimation(param.index, FADE_TIME_MIN + random(FADE_TIME),
                     std::bind(&anim_starry_night::FadeOutAnimUpdate, this, std::placeholders::_1));
                 break;

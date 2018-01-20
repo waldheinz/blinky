@@ -11,7 +11,7 @@
 class anim_lighthouse final : public animation {
 public:
 
-    anim_lighthouse() : animations(1) {
+    anim_lighthouse(output * out) : animation(out), animations(1) {
         animations.StartAnimation(0, 2000,
             std::bind(&anim_lighthouse::animate, this, std::placeholders::_1));
     }
@@ -34,10 +34,10 @@ private:
                 const float d2 = ((float)col / COLUMNS) * M_PI * 2;
                 const float d = fabsf(sin(d1 - d2));
                 const float de = NeoEase::CubicInOut(d);
-                const RgbwColor c = colorGamma.Correct(RgbwColor::LinearBlend(RgbwColor(0), RgbwColor(96), de));
+                const RgbwColor c = RgbwColor::LinearBlend(RgbwColor(0), RgbwColor(255), de);
 
                 for (int row = 0; row < ROWS; row++) {
-                    strip.SetPixelColor(to_index(col, row), c);
+                    set_pixel(col, row, c);
                 }
             }
         }

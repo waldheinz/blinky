@@ -8,16 +8,13 @@ public:
     static constexpr float SCALE_NEW = 0.28f;
     static constexpr float SCALE_OLD = 0.70f;
 
-    anim_fire() {
-
-    }
+    anim_fire(output * out) : animation(out) { }
 
     void loop() override {
         std::swap(heat_src, heat_target);
         add_sparks();
         burn();
         show();
-        //delay(15);
     }
 
 private:
@@ -59,20 +56,18 @@ private:
         RgbwColor result;
 
         if (d < 0.25f) {
-            result = RgbwColor::LinearBlend(black, red, d * 4);
+            return RgbwColor::LinearBlend(black, red, d * 4);
         } else if (d < 0.5f) {
-            result = RgbwColor::LinearBlend(red, yellow, (d - 0.25f) * 4);
+            return RgbwColor::LinearBlend(red, yellow, (d - 0.25f) * 4);
         } else {
-            result = RgbwColor::LinearBlend(yellow, white, (d - 0.5f) * 2);
+            return RgbwColor::LinearBlend(yellow, white, (d - 0.5f) * 2);
         }
-
-        return colorGamma.Correct(result);
     }
 
     void show() const {
         for (int c = 0; c < COLUMNS; c++) {
             for (int r = 0; r < ROWS; r++) {
-                strip.SetPixelColor(to_index(c, r), map_color(heat[heat_target][r][c]));
+                set_pixel(c, r, map_color(heat[heat_target][r][c]));
             }
         }
     }

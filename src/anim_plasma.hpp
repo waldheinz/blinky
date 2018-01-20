@@ -18,7 +18,7 @@ uint16_t SINE_TABLE[] = {
 
 class anim_plasma final : public animation {
 public:
-    anim_plasma() : anims(2) {
+    anim_plasma(output * out) : animation(out), anims(2) {
         anims.StartAnimation(0, 10000,
             std::bind(&anim_plasma::animate, this, std::placeholders::_1));
 
@@ -90,7 +90,7 @@ private:
 
                     const auto c = map_colour_1(v * 180.0f);
 
-                    strip.SetPixelColor(to_index(col, row), colorGamma.Correct(c));
+                    set_pixel(col, row, c);
                 }
             }
         }

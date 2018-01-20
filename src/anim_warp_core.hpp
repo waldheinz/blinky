@@ -13,7 +13,7 @@ public:
     static const int PULSE_COUNT = 4;
     static constexpr float PULSE_WIDTH = 1.5;
 
-    anim_warp_core() : anims(PULSE_COUNT + 1)  {
+    anim_warp_core(output * out) : animation(out), anims(PULSE_COUNT + 1) {
         anims.StartAnimation(0, random(500) + 1000,
             std::bind(&anim_warp_core::start_pulse, this, std::placeholders::_1));
     }
@@ -59,7 +59,7 @@ private:
                     : RgbwColor(0, 0, 32);
 
                 for (uint8_t col = 0; col < COLUMNS; col++) {
-                    strip.SetPixelColor(to_index(col, row), color);
+                    set_pixel(col, row, color);
                 }
             }
 

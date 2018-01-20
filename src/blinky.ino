@@ -9,9 +9,6 @@
 #include "anim_starry_night.hpp"
 #include "anim_warp_core.hpp"
 
-NeoGamma<NeoGammaTableMethod> colorGamma;
-NeoPixelBus<NeoGrbwFeature, Neo800KbpsMethod> strip(PIXEL_COUNT);
-
 void SetRandomSeed() {
     uint32_t seed;
     seed = analogRead(0);
@@ -25,20 +22,19 @@ void SetRandomSeed() {
     randomSeed(seed);
 }
 
+output out;
 animation* anim = nullptr;
 
 void setup() {
-    strip.Begin();
-    strip.Show();
-
+    out.show();
     SetRandomSeed();
 }
 
 void loop() {
     if (!anim) {
-        anim = new anim_plasma();
+        anim = new anim_plasma(&out);
     }
 
     anim->loop();
-    strip.Show();
+    out.show();
 }
