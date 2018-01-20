@@ -24,15 +24,24 @@ void SetRandomSeed() {
 
 output out;
 animation* anim = nullptr;
+Encoder knob(D1, D2);
+int32_t knob_last = 0;
 
 void setup() {
     out.show();
     SetRandomSeed();
+    knob.write(knob_last);
 }
 
 void loop() {
     if (!anim) {
         anim = new anim_plasma(&out);
+    }
+
+    const int32_t knob_now = knob.read();
+    if (knob_now != knob_last) {
+        out.set_darken(knob_now > knob_last);
+        knob_last = knob_now;
     }
 
     anim->loop();

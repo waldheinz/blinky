@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <Encoder.h>
 #include <NeoPixelBus.h>
 #include <NeoPixelAnimator.h>
 
@@ -12,7 +13,7 @@ const uint16_t PIXEL_COUNT = COLUMNS * ROWS;
 
 class output {
 public:
-    output() : strip(PIXEL_COUNT) {
+    output() : strip(PIXEL_COUNT), darken(128) {
         strip.Begin();
     }
 
@@ -23,17 +24,26 @@ public:
     void show() {
         for (int i = 0; i < PIXEL_COUNT; i++) {
             auto c = buffer[i];
-            c.Darken(100);
+            c.Darken(darken);
             strip.SetPixelColor(i, colorGamma.Correct(c));
         }
 
         strip.Show();
     }
 
+    void set_darken(bool brighter) {
+        if (brighter && darken > 0) {
+            darken -= 1;
+        } else if (!brighter && darken < 255) {
+            darken += 1;
+        }
+    }
+
 private:
     NeoPixelBus<NeoGrbwFeature, Neo800KbpsMethod> strip;
     NeoGamma<NeoGammaTableMethod> colorGamma;
     RgbwColor buffer[PIXEL_COUNT];
+    uint8_t darken;
 };
 
 class animation {
