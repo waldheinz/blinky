@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <Encoder.h>
-#include <NeoPixelBus.h>
+#include <NeoPixelBrightnessBus.h>
 #include <NeoPixelAnimator.h>
 
 #include <cstdint>
@@ -13,37 +13,36 @@ const uint16_t PIXEL_COUNT = COLUMNS * ROWS;
 
 class output {
 public:
-    output() : strip(PIXEL_COUNT), darken(128) {
+    static const uint8_t BRIGHT_MIN = 1;
+    static const uint8_t BRIGHT_MAX = 200;
+
+    output() : strip(PIXEL_COUNT), brightness(128) {
         strip.Begin();
+        strip.SetBrightness(brightness);
     }
 
     void set_pixel(uint16_t idx, RgbwColor const & c) {
-        buffer[idx] = c;
+        strip.SetPixelColor(idx, colorGamma.Correct(c));
     }
 
     void show() {
-        for (int i = 0; i < PIXEL_COUNT; i++) {
-            auto c = buffer[i];
-            c.Darken(darken);
-            strip.SetPixelColor(i, colorGamma.Correct(c));
-        }
-
         strip.Show();
     }
 
-    void set_darken(bool brighter) {
-        if (brighter && darken > 0) {
-            darken -= 1;
-        } else if (!brighter && darken < 255) {
-            darken += 1;
+    void adjust_brightness(bool darker) {
+        if (darker && brightness > BRIGHT_MIN) {
+            brightness -= 1;
+        } else if (!darker && brightness < BRIGHT_MAX) {
+            brightness += 1;
         }
+
+        strip.SetBrightness(brightness);
     }
 
 private:
-    NeoPixelBus<NeoGrbwFeature, Neo800KbpsMethod> strip;
+    NeoPixelBrightnessBus<NeoGrbwFeature, Neo800KbpsMethod> strip;
     NeoGamma<NeoGammaTableMethod> colorGamma;
-    RgbwColor buffer[PIXEL_COUNT];
-    uint8_t darken;
+    uint8_t brightness;
 };
 
 class animation {
@@ -72,4 +71,13 @@ protected:
 
 private:
     output * const out;
+};
+
+class work_light final : public animation {
+public:
+    work_light(output * out) : animation(out) {
+        for (int i = 0; i < PIXEL_COUNT; i++) {
+            set_pixel(i, RgbwColor(255, 255, 255));
+        }
+    }
 };

@@ -35,12 +35,12 @@ void setup() {
 
 void loop() {
     if (!anim) {
-        anim = new anim_plasma(&out);
+        anim = new anim_fire(&out);
     }
 
     const int32_t knob_now = knob.read();
-    if (knob_now != knob_last) {
-        out.set_darken(knob_now > knob_last);
+    if (std::abs(knob_now - knob_last) >= 4) {
+        out.adjust_brightness(knob_now < knob_last);
         knob_last = knob_now;
     }
 
