@@ -1,24 +1,22 @@
-// properties of the translucent shell
+/* properties of the translucent shell */
 $outer_diameter = 150;
 $wall_width = 3;
 $thickness = 8;
 $bar_thickness = 5;
-$bar_width = 5;
-$bar_spacing = 10;
+$bar_spacing = 15;
 $rim_width = 10;
 
-// properties of the inner shell / mounting hole for control knob
-
+/* properties of the inner ring */
 $inner_wall_width = 3;
 $inner_ring_width = 6;
 $inner_ring_center = 55 - $inner_wall_width / 2;
 
 /* knob plate */
 $knob_plate_radius = 20;
-$knob_hole_radius = 7 / 2; // M7 x 0.75 thread
+$knob_hole_radius = 5.92 / 2; // M7 x 0.75 thread
 $knob_plate_thickness = 4;
 
-// purely computed values
+/* purely computed values */
 $inner_ring_start = $inner_ring_center - $inner_ring_width / 2;
 $inner_ring_end = $inner_ring_center + $inner_ring_width / 2;
 $inner_ring_cutout_start = $inner_ring_center - $inner_wall_width / 2;
@@ -51,11 +49,10 @@ difference() {
         
         /* bars */
         intersection() {
-            union() {
-                for (i = [-$outer_radius : $bar_spacing : $outer_radius]) {
-                    translate ([0, i, $thickness / 2])
-                        cube([$outer_diameter, $bar_thickness, $thickness], center=true);
-                }
+            for (a = [0 : 20 : 180]) {
+                echo(a);
+                rotate([0, 0, a]) translate ([0, 0, $thickness / 2])
+                    cube([$outer_diameter, $bar_thickness, $thickness], center = true);
             }
             
             translate([0, 0, -5])
