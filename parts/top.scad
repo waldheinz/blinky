@@ -13,6 +13,11 @@ $inner_wall_width = 3;
 $inner_ring_width = 6;
 $inner_ring_center = 55 - $inner_wall_width / 2;
 
+/* knob plate */
+$knob_plate_radius = 20;
+$knob_hole_radius = 7 / 2; // M7 x 0.75 thread
+$knob_plate_thickness = 4;
+
 // purely computed values
 $inner_ring_start = $inner_ring_center - $inner_ring_width / 2;
 $inner_ring_end = $inner_ring_center + $inner_ring_width / 2;
@@ -22,6 +27,7 @@ $inner_ring_cutout_end = $inner_ring_center + $inner_wall_width / 2;
 $outer_radius = $outer_diameter / 2;
 
 difference() {
+    
     union() {
         difference() {
             /* outer ring */
@@ -68,19 +74,37 @@ difference() {
                 $inner_ring_start,
                 $fa=2);
         }
+        
+        /* plate for knob */
+        cylinder($thickness, $knob_plate_radius, $knob_plate_radius, $fa=2);
     }
     
-    /* inner ring cutout */
-    translate([0, 0, 5]) difference() {
-        cylinder(
-            $thickness,
-            $inner_ring_cutout_end,
-            $inner_ring_cutout_end, $fa=2);
+    union() {
+        /* inner ring cutout */
+        translate([0, 0, 5]) difference() {
+            cylinder(
+                $thickness,
+                $inner_ring_cutout_end,
+                $inner_ring_cutout_end, $fa=2);
+            
+            cylinder(
+                $thickness,
+                $inner_ring_cutout_start,
+                $inner_ring_cutout_start,
+                $fa=2);
+        }
         
-        cylinder(
+        /* knob plate hole */
+        translate([0, 0, -1]) cylinder(
+            $thickness + 2,
+            $knob_hole_radius,
+            $knob_hole_radius, $fa=2);
+        
+        /* ensure knob plate thickness */
+        translate([0, 0, $knob_plate_thickness]) cylinder(
             $thickness,
-            $inner_ring_cutout_start,
-            $inner_ring_cutout_start,
+            $knob_plate_radius - 5,
+            $knob_plate_radius - 5,
             $fa=2);
     }
 }
