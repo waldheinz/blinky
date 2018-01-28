@@ -8,7 +8,7 @@ $rim_width = 10;
 
 /* properties of the inner ring */
 $inner_wall_width = 3;
-$inner_ring_width = 6;
+$inner_ring_width = 8;
 $inner_ring_center = 55 - $inner_wall_width / 2;
 
 /* knob plate */
@@ -95,7 +95,7 @@ difference() {
         translate([0, 0, -1]) cylinder(
             $thickness + 2,
             $knob_hole_radius,
-            $knob_hole_radius, $fa=2);
+            $knob_hole_radius, $fn=180);
         
         /* ensure knob plate thickness */
         translate([0, 0, $knob_plate_thickness]) cylinder(
