@@ -72,11 +72,23 @@ difference() {
                 cylinder(20, 7, 7, $fn = 60);
     }
     
+    /* save some material */
     translate([0, 0, -7])
-    cylinder($total_height, $total_radius_bottom - 5, $total_radius - 5, $fn=180);
+        cylinder($total_height, $total_radius_bottom - 5, $total_radius - 5, $fn=180);
+    
+    /* fuse holder */
+    translate([0, 0, $total_height - 10]) {
+        cylinder(20, 22.4 / 2, 22.4 / 2, $fn=60);
+
+        /* power in */
+        for (a = [0, 180, 70]) {
+            rotate([0, 0, a]) translate([33.5 / 2, 0, 0])
+                cylinder(20, 4.5 / 2, 4.5 / 2, $fn=60);
+        }
+    }
 }
 
-/* cut away for felt gliders */
+/* felt gliders */
 for (rz = [0, 120, 240]) {
     rotate([0, 0, 90 + rz]) {
         translate([$felt_glider_displace, 0, 0]) difference() {
