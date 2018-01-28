@@ -6,13 +6,13 @@ extra_cutout = 0.1;
 
 /* shade parameters */
 $shade_outer_diameter = 150 + extra_cutout;
-$shade_inner_diameter = 147 - extra_cutout;
-$shade_base_overlap = 5;
+$shade_inner_diameter = 144 - extra_cutout;
+$shade_base_overlap = 3;
 
 /* LED carrier parameters */
 $ledc_outer_diameter = 110 + extra_cutout;
-$ledc_inner_diameter = 107 - extra_cutout;
-$ledc_base_overlap = 5;
+$ledc_inner_diameter = 104 - extra_cutout;
+$ledc_base_overlap = 3;
 
 /* felt glider cutout */
 $felt_glider_radius = 17 / 2;
@@ -36,15 +36,27 @@ difference() {
         $ledc_inner_radius - 2, $fn=360);
     
     /* cut groove for shade */
-    translate([0, 0, $total_height - $shade_base_overlap]) difference() {
-        cylinder($total_height, $shade_outer_radius, $shade_outer_radius, $fn=180);
-        cylinder($total_height, $shade_inner_radius, $shade_inner_radius, $fn=180);
+    translate([0, 0, $total_height - $shade_base_overlap + 1]) {
+        difference() {
+            cylinder($shade_base_overlap, $shade_outer_radius, $shade_outer_radius, $fn=180);
+            cylinder($shade_base_overlap, $shade_inner_radius, $shade_inner_radius, $fn=180);
+        }
+        
+        rotate_extrude(convexity = 10, $fn=180)
+            translate([($shade_outer_radius + $shade_inner_radius) / 2 , 0, 0])
+                circle(r = ($shade_outer_radius - $shade_inner_radius) / 2, $fn = 20);
     }
     
     /* cut groove for LED carrier */
-    translate([0, 0, $total_height - $ledc_base_overlap]) difference() {
-        cylinder($total_height, $ledc_outer_radius, $ledc_outer_radius, $fn=180);
-        cylinder($total_height, $ledc_inner_radius, $ledc_inner_radius, $fn=180);
+    translate([0, 0, $total_height - $ledc_base_overlap + 1]) {
+        difference() {
+            cylinder($shade_base_overlap, $ledc_outer_radius, $ledc_outer_radius, $fn=180);
+            cylinder($shade_base_overlap, $ledc_inner_radius, $ledc_inner_radius, $fn=180);
+        }
+        
+        rotate_extrude(convexity = 10, $fn=180)
+            translate([($ledc_outer_radius + $ledc_inner_radius) / 2 , 0, 0])
+                circle(r = ($ledc_outer_radius - $ledc_inner_radius) / 2, $fn = 20);
     }
     
     /* cut away material so we have three "feet" */
