@@ -1,4 +1,4 @@
-$fa = 5;
+$fa = 1;
 $fs = 0.5;
 
 $total_diameter = 155;
@@ -103,7 +103,7 @@ difference() {
         cylinder(20, 22.4 / 2, 22.4 / 2);
 
         /* power in */
-        for (a = [0, 180, 60, 80]) {
+        for (a = [0, 180, 70, 110]) {
             rotate([0, 0, a]) translate([33.5 / 2, 0, 0])
                 cylinder(20, 4.5 / 2, 4.5 / 2);
         }
