@@ -20,7 +20,7 @@ $ledc_base_overlap = 3;
 /* felt glider cutout */
 $felt_glider_radius = 17 / 2;
 $felt_glider_displace = 70;
-$felt_glider_depth = 1;
+$felt_glider_depth = 0.5;
 
 /* computed values */
 $shade_outer_radius = $shade_outer_diameter / 2;
