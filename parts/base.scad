@@ -1,11 +1,11 @@
-$fa = 3.5;
+$fa = 5;
 $fs = 0.5;
 
 $total_diameter = 155;
 $total_diameter_bottom = 170;
 $total_height = 40;
 
-extra_cutout = 0.1;
+extra_cutout = 0.5;
 
 /* shade parameters */
 $shade_outer_diameter = 150 + extra_cutout;
@@ -70,12 +70,12 @@ difference() {
     
     /* cut away from one foot to make room for DC jack and power switch */
     for (a = [-20]) {
-        rotate([0, 0, a]) translate([0, $total_radius+3.6, 10]) {
+        rotate([0, 0, a]) translate([0, $total_radius + 2, 20]) {
             //cube([10, 40, 40], center = true);
             rotate([-90, 0, 0]) {
-                cylinder(20, 12.1 / 2, 12.1 / 2, $fn=60);
-                translate([0, 0, -10]) cylinder(30, 11 / 2, 11 / 2);
-                translate([0, 0, -33]) cylinder(30, 16.1 / 2, 16.1 / 2, $fn=6);
+                cylinder(20, 12.2 / 2, 12.2 / 2);
+                translate([0, 0, -10]) cylinder(30, 11.2 / 2, 11.2 / 2);
+                translate([0, 0, -33]) rotate([0, 0, 30]) cylinder(30, 16.3 / 2, 16.3 / 2, $fn=6);
             }
         }
     }
@@ -84,7 +84,7 @@ difference() {
     for (a = [15 : 30 : 360]) {
         rotate([0, 0, a]) translate([
             ($shade_inner_radius + $ledc_outer_radius) / 2, 0, $total_height - 10])
-                cylinder(20, 5, 7, $fn = 60);
+                cylinder(20, 7, 3, $fn = 60);
     }
     
     /* save some material */
@@ -96,7 +96,7 @@ difference() {
         cylinder(20, 22.4 / 2, 22.4 / 2, $fn=60);
 
         /* power in */
-        for (a = [0, 180, 70]) {
+        for (a = [0, 180, 60, 80]) {
             rotate([0, 0, a]) translate([33.5 / 2, 0, 0])
                 cylinder(20, 4.5 / 2, 4.5 / 2, $fn=60);
         }
