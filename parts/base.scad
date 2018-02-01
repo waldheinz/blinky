@@ -68,9 +68,9 @@ difference() {
             cylinder($total_radius_bottom, 45, 45);
     }
     
-    /* cut away from one foot to make room for DC jack and power switch */
+    /* cut away from one foot to make room for DC jack */
     for (a = [-20]) {
-        rotate([0, 0, a]) translate([0, $total_radius + 2, 20]) {
+        rotate([0, 0, a]) translate([0, $total_radius + 2, 15]) {
             //cube([10, 40, 40], center = true);
             rotate([-90, 0, 0]) {
                 cylinder(20, 12.2 / 2, 12.2 / 2);
@@ -80,11 +80,18 @@ difference() {
         }
     }
    
+    rotate([0, 0, 20]) translate([0, $total_radius - 10, 15]) rotate([-90, 0, 0]) {
+        cylinder(40, 3, 3);
+        cylinder(11, 4, 4);
+        cube([9, 14, 19], center = true);
+        translate([0, 0, 15]) cylinder(3, 6, 6, center = true);
+    }
+    
     /* vent holes */
     for (a = [15 : 30 : 360]) {
         rotate([0, 0, a]) translate([
             ($shade_inner_radius + $ledc_outer_radius) / 2, 0, $total_height - 10])
-                cylinder(20, 7, 3, $fn = 60);
+                cylinder(20, 7, 3);
     }
     
     /* save some material */
@@ -93,12 +100,12 @@ difference() {
     
     /* fuse holder */
     translate([0, 0, $total_height - 10]) {
-        cylinder(20, 22.4 / 2, 22.4 / 2, $fn=60);
+        cylinder(20, 22.4 / 2, 22.4 / 2);
 
         /* power in */
         for (a = [0, 180, 60, 80]) {
             rotate([0, 0, a]) translate([33.5 / 2, 0, 0])
-                cylinder(20, 4.5 / 2, 4.5 / 2, $fn=60);
+                cylinder(20, 4.5 / 2, 4.5 / 2);
         }
     }
 }
