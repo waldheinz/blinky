@@ -56,7 +56,7 @@ public:
 
     static uint16_t to_index(uint8_t col, uint8_t row) {
         const int16_t c = col;
-        const int16_t r = row;
+        const int16_t r = ROWS - row - 1;
 
         return c * (int16_t)ROWS + ((c % 2 == 0) ? r : ((int16_t)ROWS - r - 1));
     }
