@@ -8,7 +8,15 @@ public:
     static constexpr float SCALE_NEW = 0.28f;
     static constexpr float SCALE_OLD = 0.70f;
 
-    anim_fire(output * out) : animation(out) { }
+    anim_fire(output * out) : animation(out) {
+        for (int i = 0; i < 2; i++) {
+            for (int r = 0; r < ROWS; r++) {
+                for (int c = 0; c < COLUMNS; c++) {
+                    heat[i][r][c] = 0.0f;
+                }
+            }
+        }
+    }
 
     void loop() override {
         std::swap(heat_src, heat_target);
