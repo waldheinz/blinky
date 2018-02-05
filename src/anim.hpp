@@ -29,6 +29,12 @@ public:
         strip.Show();
     }
 
+    void clear() {
+        for (int i=0; i < PIXEL_COUNT; i++) {
+            set_pixel(i, RgbwColor(0));
+        }
+    }
+
     void adjust_brightness(bool darker) {
         if (darker) {
             brightness = std::min(brightness * 0.9f, brightness - 1.0f);

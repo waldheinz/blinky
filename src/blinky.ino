@@ -43,6 +43,8 @@ unsigned long last_btn_input = 0;
 long const debounce_delay = 50; /* ms */
 
 void set_animation() {
+    out.clear();
+
     switch (anim_idx) {
     case 0:
         anim = std::unique_ptr<animation>(new anim_fire(&out));
