@@ -13,10 +13,10 @@ const uint16_t PIXEL_COUNT = COLUMNS * ROWS;
 
 class output {
 public:
-    static const uint8_t BRIGHT_MIN = 1;
-    static const uint8_t BRIGHT_MAX = 200;
+    static const uint16_t BRIGHT_MIN = 1;
+    static const uint16_t BRIGHT_MAX = 200;
 
-    output() : strip(PIXEL_COUNT), brightness(128) {
+    output() : strip(PIXEL_COUNT), brightness(BRIGHT_MAX) {
         strip.Begin();
         strip.SetBrightness(brightness);
     }
@@ -30,19 +30,20 @@ public:
     }
 
     void adjust_brightness(bool darker) {
-        if (darker && brightness > BRIGHT_MIN) {
-            brightness -= 1;
-        } else if (!darker && brightness < BRIGHT_MAX) {
-            brightness += 1;
+        if (darker) {
+            brightness = std::min(brightness * 0.9f, brightness - 1.0f);
+        } else {
+            brightness = std::max(brightness * 1.1f, brightness + 1.0f);
         }
 
+        brightness = std::max(BRIGHT_MIN, std::min(BRIGHT_MAX, brightness));
         strip.SetBrightness(brightness);
     }
 
 private:
     NeoPixelBrightnessBus<NeoGrbwFeature, Neo800KbpsMethod> strip;
     NeoGamma<NeoGammaTableMethod> colorGamma;
-    uint8_t brightness;
+    uint16_t brightness;
 };
 
 class animation {

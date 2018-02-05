@@ -64,7 +64,7 @@ void loop() {
     /* adjust brightness */
     const int32_t knob_now = knob.read();
     if (std::abs(knob_now - knob_last) >= 4) {
-        out.adjust_brightness(knob_now < knob_last);
+        out.adjust_brightness(knob_now > knob_last);
         knob_last = knob_now;
     }
 
