@@ -46,15 +46,15 @@ private:
 
     void add_sparks() {
         for (int c=0; c < COLUMNS; c++) {
-            if (random(100) > 94) {
-                heat[heat_src][0][c] = MAX_HEAT;
+            if (random(100) > 96) {
+                heat[heat_src][0][c] = MAX_HEAT / 2 + random(MAX_HEAT / 2);
             }
         }
     }
 
     RgbwColor map_color(float heat) const {
         const float d = std::max(std::min(heat / MAX_HEAT, 1.0f), 0.0f);
-        const uint8_t maxBright = 128;
+        const uint8_t maxBright = 255;
 
         static const RgbwColor black = RgbwColor(0);
         static const RgbwColor red = RgbwColor(maxBright, 0, 0);
