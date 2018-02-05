@@ -1,5 +1,9 @@
+#include <ArduinoOTA.h>
+#include <ESP8266HTTPUpdateServer.h>
+#include <ESP8266WebServer.h>
 #include <NeoPixelBus.h>
 #include <NeoPixelAnimator.h>
+#include <WiFiManager.h>
 
 #include <memory>
 
@@ -24,6 +28,10 @@ void SetRandomSeed() {
     randomSeed(seed);
 }
 
+WiFiManager wifiManager;
+ESP8266WebServer httpServer(80);
+ESP8266HTTPUpdateServer httpUpdater;
+
 output out;
 std::unique_ptr<animation> anim = nullptr;
 Encoder knob(D1, D2);
@@ -42,10 +50,16 @@ void setup() {
     pinMode(D0, OUTPUT);
     digitalWrite(D0, 1);
 
+    wifiManager.autoConnect();
+    httpUpdater.setup(&httpServer);
+    httpServer.begin();
+
     anim = std::unique_ptr<anim_fire>(new anim_fire(&out));
 }
 
 void loop() {
+    httpServer.handleClient();
+    ArduinoOTA.handle();
 
     /* adjust brightness */
     const int32_t knob_now = knob.read();
@@ -56,8 +70,6 @@ void loop() {
 
     /* toggle animations */
     auto const btn_state = digitalRead(D3);
-
-
     long const now = millis();
 
     if ((now - last_btn_input) > debounce_delay) {
