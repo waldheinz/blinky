@@ -33,7 +33,7 @@ private:
         switch (param.state) {
             case AnimationState_Progress:
                 set_pixel(indices[param.index],
-                    RgbwColor::LinearBlend(RgbwColor(128), RgbwColor(0), fabs(param.progress - 0.5) * 2));
+                    RgbwColor::LinearBlend(RgbwColor(255), RgbwColor(0), fabs(param.progress - 0.5) * 2));
                 break;
 
             case AnimationState_Started:
