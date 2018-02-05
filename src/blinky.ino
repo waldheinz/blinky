@@ -1,5 +1,6 @@
 #include <ArduinoOTA.h>
 #include <ESP8266HTTPUpdateServer.h>
+#include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <NeoPixelBus.h>
 #include <NeoPixelAnimator.h>
@@ -50,9 +51,12 @@ void setup() {
     pinMode(D0, OUTPUT);
     digitalWrite(D0, 1);
 
+    MDNS.begin("blinky");
     wifiManager.autoConnect();
     httpUpdater.setup(&httpServer);
     httpServer.begin();
+    MDNS.addService("http", "tcp", 80);
+    ArduinoOTA.begin();
 
     anim = std::unique_ptr<anim_fire>(new anim_fire(&out));
 }
