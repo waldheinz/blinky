@@ -24,12 +24,12 @@ private:
         if (param.state == AnimationState_Completed) {
             start(param.index);
         } else if (param.state == AnimationState_Progress) {
-            float drop_y = ROWS * (1 - param.progress);
+            float const drop_y = (ROWS + 6) * (1 - param.progress) - 3.0f;
 
             for (int row = 0; row < ROWS; row++) {
-                const float d = std::min(std::max(fabsf(row - drop_y) / 2.0f, 0.0f), 1.0f);
+                const float d = std::min(std::max(fabsf(row - drop_y) / 3.0f, 0.0f), 1.0f);
                 const float de = NeoEase::CubicInOut(d);
-                const RgbwColor c = RgbwColor::LinearBlend(RgbwColor(0, 15, 64), RgbwColor(0), de);
+                const RgbwColor c = RgbwColor::LinearBlend(RgbwColor(0, 100, 255), RgbwColor(0), de);
 
                 set_pixel(param.index, row, c);
             }

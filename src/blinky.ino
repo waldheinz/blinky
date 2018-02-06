@@ -37,7 +37,7 @@ output out;
 std::unique_ptr<animation> anim = nullptr;
 Encoder knob(D1, D2);
 int32_t knob_last = 0;
-uint32_t anim_idx = 2;
+uint32_t anim_idx = 3;
 bool btn_handled = false;
 unsigned long last_btn_input = 0;
 long const debounce_delay = 50; /* ms */
