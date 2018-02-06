@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "anim.hpp"
+#include "anim_disco.hpp"
 #include "anim_fire.hpp"
 #include "anim_lighthouse.hpp"
 #include "anim_plasma.hpp"
@@ -37,7 +38,7 @@ output out;
 std::unique_ptr<animation> anim = nullptr;
 Encoder knob(D1, D2);
 int32_t knob_last = 0;
-uint32_t anim_idx = 3;
+uint32_t anim_idx = 0;
 bool btn_handled = false;
 unsigned long last_btn_input = 0;
 long const debounce_delay = 50; /* ms */
@@ -47,22 +48,26 @@ void set_animation() {
 
     switch (anim_idx) {
     case 0:
-        anim = std::unique_ptr<animation>(new anim_fire(&out));
+        anim = std::unique_ptr<animation>(new anim_disco(&out));
         break;
 
     case 1:
-        anim = std::unique_ptr<animation>(new anim_lighthouse(&out));
+        anim = std::unique_ptr<animation>(new anim_fire(&out));
         break;
 
     case 2:
-        anim = std::unique_ptr<animation>(new anim_plasma(&out));
+        anim = std::unique_ptr<animation>(new anim_lighthouse(&out));
         break;
 
     case 3:
-        anim = std::unique_ptr<animation>(new anim_rain(&out));
+        anim = std::unique_ptr<animation>(new anim_plasma(&out));
         break;
 
     case 4:
+        anim = std::unique_ptr<animation>(new anim_rain(&out));
+        break;
+
+    case 5:
         anim = std::unique_ptr<animation>(new anim_starry_night(&out));
         break;
 
